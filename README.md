@@ -127,7 +127,7 @@ In addition to the general task structure, there are additional parameters to be
 
 To create a task according to the desired specification, two assets need to be generated: a Unity prefab for each 
 segment and the metadata .json file. The easiest way to create these assets is to start with an already existing 
-task and modify it to match the desired parameters.
+task and modify it to match the desired parameters. Use ctrl/cmd D to duplicate existing segment prefabs and .json files.
 
 #### Segment Prefabs
 
