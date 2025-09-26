@@ -97,6 +97,6 @@ crashlytics-build.properties
 !/Assets/VRSettings/Displays/Display.asset*
 
 
-/Assets/Scenes/*
+# /Assets/Scenes/*
 !/Assets/Scenes/ExperimentTemplate.scenetemplate*
 !/Assets/Scenes/ExperimentTemplate.unity*
