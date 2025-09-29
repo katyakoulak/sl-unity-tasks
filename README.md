@@ -296,6 +296,8 @@ These notes are primarily directory to project developers and task creators.
 * For information on how to send MQTT messages to Unity, see 
   [here](https://github.com/winnubstj/Gimbl/wiki/Example-code-of-MQTT-subscribing-and-publishing).
 
+* Additional cues can be found [here](https://github.com/sprustonlab/vr-visual-cues).
+
 ___
 
 ## Authors
