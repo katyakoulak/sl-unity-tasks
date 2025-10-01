@@ -296,7 +296,12 @@ These notes are primarily directory to project developers and task creators.
 * For information on how to send MQTT messages to Unity, see 
   [here](https://github.com/winnubstj/Gimbl/wiki/Example-code-of-MQTT-subscribing-and-publishing).
 
-* Additional cues can be found [here](https://github.com/sprustonlab/vr-visual-cues).
+* Additional cues can be found [here](https://github.com/sprustonlab/vr-visual-cues). To use a new cue:
+  1. Convert a .ai file to .png
+  1. Import the png into Unity as an asset. Put the asset in the Assets/InfiniteCorridorTask/Textures folder.
+  1. Create a new material or just duplicate one of the existing materials. Currently all cues are prefab variants of cue A. To keep this structure, duplicate any other material (eg CueB). Materials are saved in the Assets/InfiniteCorridorTask/Materials folder.
+  1. Set the material's texture to the new png.
+  1. On the segment you are modifying, use the Mesh Renderer component to select the new material.
 
 ___
 
