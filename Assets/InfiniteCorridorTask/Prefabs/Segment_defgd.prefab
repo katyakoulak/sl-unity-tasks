@@ -300,7 +300,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8380481797385035066}
   m_Layer: 0
-  m_Name: CueD2
+  m_Name: CueD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

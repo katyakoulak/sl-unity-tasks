@@ -62,7 +62,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.49, y: 0.5, z: 1.5}
-  m_LocalScale: {x: 3, y: 1, z: 1}
+  m_LocalScale: {x: -3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4090754570054668039}
@@ -391,7 +391,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.49, y: 0.5, z: 1.5}
-  m_LocalScale: {x: 3, y: 1, z: 1}
+  m_LocalScale: {x: -3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8272714024695903708}
@@ -503,7 +503,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.49, y: 0.5, z: 1.5}
-  m_LocalScale: {x: 3, y: 1, z: 1}
+  m_LocalScale: {x: -3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1917763783133662150}
@@ -615,7 +615,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.49, y: 0.5, z: 1.5}
-  m_LocalScale: {x: 3, y: 1, z: 1}
+  m_LocalScale: {x: -3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1979120925995699633}
@@ -1189,7 +1189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4090754570054668039}
   m_Layer: 0
-  m_Name: CueA2
+  m_Name: CueA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
