@@ -1,11 +1,10 @@
 # sl-unity-tasks
 
-A C# Unity project that provides assets to create and execute Virtual Reality (VR) tasks used to facilitate 
-experiments in the Sun (NeuroAI) lab. 
+A C# Unity project that provides assets to create and execute Virtual Reality (VR) tasks used to facilitate experiments in the Sun (NeuroAI) lab. 
 
 ---
 
-## Detailed Description
+## Overview
 
 This project provides assets and bindings for building Virtual Reality (VR) tasks used by some data acquisition systems
 in the Sun lab to conduct experiments. Primarily, the project is designed to construct an **infinite linear corridor**
@@ -39,24 +38,24 @@ ___
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Creating New Tasks](#creating-new-tasks)
+- [Task Creation](#task-creation)
 - [Developer Notes](#developer-notes)
 - [Authors](#authors)
 - [License](#license)
-- [Acknowledgements](#Acknowledgments)
+- [Acknowledgements](#acknowledgments)
 
 ___
 
 ## Dependencies
 
-### Internal Dependencies
+### Internal 
 
 These dependencies are automatically installed with the project either as .dll files or as asset collections:
 - [2MQTT package](https://github.com/eclipse/paho.mqtt.m2mqtt) version **4.3.0**.
 - [Path-Creator package](https://github.com/SebLague/Path-Creator) latest available version.
 - [SharpDX package](https://github.com/sharpdx/SharpDX/tree/master) version **4.2.0**.
 
-### External Dependencies
+### External
 
 The user must install these dependencies before working with this Unity project:
 - [MQTT broker](https://mosquitto.org/) version **2.0.21**. This project was tested with the broker running locally, 
@@ -84,38 +83,43 @@ ___
 
 ## Usage
 
-This section discusses how to use existing tasks to conduct experiment and create new tasks using the project. 
-**Note!** This library is specifically written to work with 
-[sl-experiment](https://github.com/Sun-Lab-NBB/sl-experiment) library and will likely not work in other 
-contexts.
+This section explains how to use existing tasks during experiments and how to create new tasks within this project.
 
-### Creating New Tasks
+**Note!** This library is designed to work exclusively with [sl-experiment](https://github.com/Sun-Lab-NBB/sl-experiment). It is unlikely to function correctly in other environments.
 
-The key feature of this project is the **task creator**: a system for quickly making any infinite corridor task with or 
-without probabilistic transitions between corridor segments (trial motifs). 
+### Task Creation
 
-#### Task Definition
+The core feature of this project is the **task creator**, a system for building infinite-corridor VR tasks, with or without probabilistic transitions between corridor segments.
 
-Each **task** can be conceptualized as a set of infinite corridor **segments** and the **transition probabilities** 
-between then. Each segment is split into **cues*, which are portions of the corridor walls that have different 
-colors/textures. Since each task segment typically contains a reward zone that conditionally delivers water to the 
-animal, traversing each segment typically constitutes a single **experiment trial**. Therefore, the sequence of wall 
-cues that makes each segment is frequently referred to as the **trial motifs** in this project and the sl-experiment 
-documentation.
+#### Concept Overview
 
-Overall, a set of segments can represent any task graph depicting transitions between infinite corridor cues. For 
-example, the cue graph below can be represented by two segments with uniform transition probabilities between 
-each other:
+In a typical trial, the animal runs down a corridor that appears visually infinite.
+
+Along the corridor walls are **cues** - textures, colors, patterns (2048 x 1060 pixels) - each represented by a letter (e.g., A, B, C, D).
+
+<img src="imgs/example_cues.png" width="300" alt="graph picture">
+
+These cues form sequences. Below is a graphical representation of four cues (A, B, C, D) and the transitions between them.
 
 <img src="imgs/cue_graph.png" width="233" alt="graph picture">
+
+When the animal reaches cue C, it receives a water reward. To reproduce such cue sequences in Unity, we define **segments**, each representing a possible visual path the animal can take. In the above graphical structure, there are two potential segments that the animal can traverse.
 
 1. **Segment 1**: A, B, C
 2. **Segment 2**: A, B, D, C
 
-During experiment, both segments are typically reused many times to create a long sequence of segments to be experienced
-by the animal during runtime.
+Other segment permutations can also be used: (C, A, B) & (C, A, B, D).  Each **segment** is composed of a set of visual **cues** the animal experiences during a single trial. In practice, cues are separated by gray “neutral” wall regions as depicted below. 
 
-In addition to the general task structure, there are additional parameters to be considered for each task, including:
+<img src="imgs/example_cues_grey.png" width="500" alt="graph picture">
+
+A single **experimental trial** consists of the animal traversing one segment and receiving a reward in a predefined reward zone. Tasks with branching or probabilistic structure are created by connecting segments according to transition probabilities.
+
+To make the corridor appear infinite, we concatenate three segments end-to-end. At the start of each trial, the animal is teleported to the beginning of this three-segment group. A full set of segment configurations forms a **task**. Depicted below is an example of a task 
+file.  
+
+<img src="imgs/tasks.png" width="500" alt="graph picture">
+
+Each task also defines parameters such as:
 - The length of each cue region.
 - The length of non-cue ('gray') wall regions between the cue regions.
 - The graphical texture (pattern) of each wall cue.
@@ -123,31 +127,38 @@ In addition to the general task structure, there are additional parameters to be
 - The graphical texture of the corridor floor.
 - The reward zone locations and the conditions for the animal to receive the rewards.
 
+File locations:
+- cues: **Assets/InfiniteCorridorTask/Textures**
+- segments: **Assets/InfiniteCorridorTask/Prefabs**
+- tasks: **Assets/InfiniteCorridorTask/Tasks**
+
 #### Implementation
 
-To create a task according to the desired specification, two assets need to be generated: a Unity prefab for each 
-segment and the metadata .json file. The easiest way to create these assets is to start with an already existing 
-task and modify it to match the desired parameters. Use ctrl/cmd D to duplicate existing segment prefabs and .json files.
+To define a new task, you must create two assets:
+- A Unity PREFAB file: stores the graphical layout of a corridor segment.
+- A metadata JSON file: describes how segments connect and what cues they contain.
 
-#### Segment Prefabs
+Both assets are expanded on below. In creating a new task, you may find it easiest to duplicate existing segment PREFABs and JSON files (Ctrl/Cmd + D) and modify them to match your new task.
 
-All segment prefabs must be placed in the directory **Assets/InfiniteCorridorTask/Prefabs**. Double-clicking on a prefab 
-opens up Unity's prefab editor. **Hint!** To verify that the file being edited is a prefab and not a GameObject, ensure
+#### Segment PREFAB files
+
+All segment prefab must be located in: **Assets/InfiniteCorridorTask/Prefabs**. Double-clicking a prefab opens it in Unity’s prefab editor. **Hint!** To verify that the file being edited is a prefab and not a GameObject, ensure
 that the scene has a **blue** background.
+
+Below is an example of a **segment** PREFAB file opened in Unity. 
 
 <img src="imgs/segment_prefab.png" width="600">
 
-Each prefab includes two key elements: the **reward location** and the **reset location**. For most tasks, the animal 
-has to lick in the reward location to receive the reward. After successfully triggering a reward delivery, the mouse 
-must pass through the reset location to get another reward.
+Each segment prefab must define:
+1. **reward location:** where the animal must lick to receive reward.
+2. **reset location:** where the animal must pass after reward to begin the next trial.
 
-Once each prefab segment is created, an additional prefab must be made for padding. This padding prefab should be a long
-empty corridor, and it is used during task runtime to give the animal an illusion that the corridor is infinite.
+In addition to your experimental segments, you must create a padding prefab: a long, empty corridor (typically gray) used to maintain the illusion of an infinite corridor during runtime.
 
 #### Metadata JSON File
-The **task metadata file**, also referred to as the **maze specification file**, ties the segment prefabs together and 
-is requisite for creating and running tasks. The structure of this file is shown below and should be matched exactly for 
-all custom metadata files for the project to work as intended:
+The **task JSON metadata file**, also referred to as the **maze specification file** is located in the **Assets/InfiniteCorridorTask/Tasks** directory. This JSON file contains metadata which describes how different segment PREFABs relate to one another. The JSON file is a prerequisite for making tasks or three segment components. This is because it contains information about which segments will be used in a task as well as the transition probabilities between segments. 
+
+This file **MUST** follow the required structure so that the task creator can parse it correctly.
 
 - **cues** *(array\<Cue>)*: The list of all cues from any segment. The order of this list determines the integer id's 
   assigned to each cue during cue sequence logging.
@@ -166,7 +177,7 @@ all custom metadata files for the project to work as intended:
       of segments. This field is optional; if unspecified, the task parser will assume uniform transitions.
 
 - **padding** *(object)*: The Segment object with no wall cues.
-  - **name** *(string)*: The name of the padding prefab in** Assets/InfiniteCorridorTask/Prefabs**.
+  - **name** *(string)*: The name of the padding prefab in **Assets/InfiniteCorridorTask/Prefabs**.
 
 - **corridor_spacing** *(number, meters or units)*: The distance inserted between consecutive corridors (groups of 
   segments) when laying them out in the world.
@@ -177,19 +188,20 @@ all custom metadata files for the project to work as intended:
 **Note!** Below is an example of a well-written metadata file for one of the existing tasks:
 <img src="imgs/maze_spec.png" width="400">
 
+Once this JSON task specification file is created, it must be placed in the **Assets/InfiniteCorridorTask/Tasks** directory.
 
-#### 'CreateTask' Tab
-Once the task specification file is created, it must be placed in the **Assets/InfiniteCorridorTask/Tasks** directory. 
-To then create the task prefab, use the **CreateTask → New Task** command. This will open up a file window to select the
-metadata .json file. Once the file is selected, a secondary prompt will open to name and save the prefab. Once created,
-the prefab can be loaded and executed as any pre-created task that comes with the project (see below).
+#### Creating a Task
+
+Once the segment PREFAB files and the JSON task specification file are created,
+they can be used to create a **task PREFAB file**. 
+
+To then create the task PREFAB, use the **CreateTask → New Task** command. This will open up a file window to select the metadata JSON file. Once the file is selected, a secondary prompt will open to name and save the task PREFAB. Once created, the task PREFAB can be loaded and executed as any pre-created task that comes with the project (see below).
 
 <img src="imgs/createTask.png" width="700">
 
 ### Loading Existing Tasks
 
-Each distribution of the project contains all tasks currently used in the Sun lab. To use an existing task, open the
- Unity project and follow these steps:
+Each distribution of the project contains all tasks currently used in the Sun lab. To use an existing task, open the Unity project and follow these steps:
 1. Create a new scene by clicking File → New Scene. Instead of using the default scene template, select 
    **ExperimentTemplate** as the template. **Note!** The first time this Unity project opens, it uses an empty scene. 
    If prompted, do ***not*** save this empty scene.
@@ -296,13 +308,6 @@ These notes are primarily directory to project developers and task creators.
 * For information on how to send MQTT messages to Unity, see 
   [here](https://github.com/winnubstj/Gimbl/wiki/Example-code-of-MQTT-subscribing-and-publishing).
 
-* Additional cues can be found [here](https://github.com/sprustonlab/vr-visual-cues). To use a new cue:
-  1. Convert a .ai file to .png
-  1. Import the png into Unity as an asset. Put the asset in the Assets/InfiniteCorridorTask/Textures folder.
-  1. Create a new material or just duplicate one of the existing materials. Currently all cues are prefab variants of cue A. To keep this structure, duplicate any other material (eg CueB). Materials are saved in the Assets/InfiniteCorridorTask/Materials folder.
-  1. Set the material's texture to the new png.
-  1. On the segment you are modifying, use the Mesh Renderer component to select the new material.
-
 ___
 
 ## Authors
@@ -323,5 +328,4 @@ ___
 
 - All Sun Lab [members](https://neuroai.github.io/sunlab/people) for providing the inspiration and comments during the
   development of this library.
-- The creators of the original [GIMBL](https://github.com/winnubstj/Gimbl) package and all dependencies used by that
-  package.
+- The creators of the original [GIMBL](https://github.com/winnubstj/Gimbl) package and all dependencies used by that package.
